@@ -83,3 +83,9 @@ end
 
 hashmap = HashMap.new
 hashmap.set('Fred', 'Smith') # Fred is hashed into a code, stored in bucket of code's index
+p hashmap.entries
+p hashmap.values
+p hashmap.keys
+p hashmap.length
+p hashmap.has('Fred')
+p hashmap.get('Fred')
