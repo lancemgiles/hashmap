@@ -1,10 +1,16 @@
 
 
 # error to raise raise IndexError if index.negative? || index >= @buckets.length
-
+# should take a key (ex: 'Carlos'), hash it into something, store it in a bucket
+# expand bucket as more values are added
 class HashMap
   # this project is only concerned with hashmaps for strings
+  attr_accessor :bucket, :keys, :values
+
   def initialize
+    @bucket = Array.new(16)
+    @keys = []
+    @values = []
   end
 
   def hash(key)
@@ -19,6 +25,10 @@ class HashMap
 
   def set(key, value)
     # If a key already exists, then the old value is overwritten
+    @keys << key
+    @values << value
+    code = hash(key)
+    @bucket << {code => value}
     # a collision is when two different keys are in the same bucket (generate same hash)
     # grow buckets size when needed by seeing if it has reached load factor
   end
@@ -29,6 +39,7 @@ class HashMap
 
   def has(key)
     # takes a key as an argument and returns true or false based on whether or not the key is in the hash map.
+    @keys.any?(key)
   end
 
   def remove(key)
@@ -40,6 +51,7 @@ class HashMap
 
   def length
     # returns the number of stored keys in the hash map
+    @keys.length
   end
 
   def clear
@@ -48,13 +60,19 @@ class HashMap
 
   def keys
     # returns an array containing all the keys inside the hash map.
+    @keys
   end
 
   def values
     # returns an array containing all the values.
+    @values
   end
 
   def entries
     # returns an array that contains each key, value pair.
+    
   end
 end
+
+hashmap = HashMap.new
+hashmap.set('Fred', 'Smith') # Fred is hashed into a code, stored in bucket of code's index
