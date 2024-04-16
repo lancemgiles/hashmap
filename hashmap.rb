@@ -5,12 +5,14 @@
 # expand bucket as more values are added
 class HashMap
   # this project is only concerned with hashmaps for strings
-  attr_accessor :bucket, :keys, :values
+  attr_accessor :bucket, :keys, :values, :codes, :bucket_size
 
   def initialize
     @bucket = Array.new(16)
     @keys = []
     @values = []
+    @codes = []
+    @bucket_size = 16
   end
 
   def hash(key)
@@ -28,14 +30,22 @@ class HashMap
     @keys << key
     @values << value
     code = hash(key)
-    @bucket << {code => value}
+    @codes << code
+    @bucket.insert(code % bucket_size,{code => value})
     # a collision is when two different keys are in the same bucket (generate same hash)
     # grow buckets size when needed by seeing if it has reached load factor
   end
 
   def get(key)
     # takes one argument as a key and returns the value that is assigned to this key. If key is not found, return nil
-    @bucket.detect { |k| k[key] }
+    return nil unless has(key)
+
+    h =@bucket.find do |k| 
+      next if k.nil?
+      
+      k.values_at(key)
+    end
+    h.values[0]
   end
 
   def has(key)
@@ -48,11 +58,9 @@ class HashMap
     # it should remove the entry with that key
     # and return the deleted entry’s value.
     # If the key isn’t in the hash map, it should return nil
-    if has(key)
-      @bucket.pop(@bucket[key])
-    else
-      nil
-    end
+    return nil unless has(key)
+
+    @bucket.pop(@bucket[key])
   end
 
   def length
