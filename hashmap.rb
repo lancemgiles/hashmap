@@ -35,6 +35,7 @@ class HashMap
 
   def get(key)
     # takes one argument as a key and returns the value that is assigned to this key. If key is not found, return nil
+    @bucket.detect { |k| k[key] }
   end
 
   def has(key)
@@ -47,6 +48,11 @@ class HashMap
     # it should remove the entry with that key
     # and return the deleted entry’s value.
     # If the key isn’t in the hash map, it should return nil
+    if has(key)
+      @bucket.pop(@bucket[key])
+    else
+      nil
+    end
   end
 
   def length
@@ -56,6 +62,7 @@ class HashMap
 
   def clear
     # removes all entries in the hash map
+    initialize
   end
 
   def keys
@@ -70,7 +77,7 @@ class HashMap
 
   def entries
     # returns an array that contains each key, value pair.
-    
+    @bucket
   end
 end
 
