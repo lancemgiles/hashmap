@@ -97,3 +97,11 @@ p hashmap.keys
 p hashmap.length
 p hashmap.has('Fred')
 p hashmap.get('Fred')
+
+hashmap.set('Jerry', 'Larry') # Fred is hashed into a code, stored in bucket of code's index
+p hashmap.entries
+p hashmap.values
+p hashmap.keys
+p hashmap.length
+p hashmap.has('Jeff')
+p hashmap.get('Jerry')
