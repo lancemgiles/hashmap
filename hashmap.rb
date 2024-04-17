@@ -32,9 +32,12 @@ class HashMap
     @values << value
     code = hash(key)
     @codes << code
-    @bucket.insert(code % bucket_size,{code => value})
+    @bucket.insert(code % bucket_size,{code => value}) # this circumvents needing an index error while respecting fixed bucket sizes
     # a collision is when two different keys are in the same bucket (generate same hash)
     # grow buckets size when needed by seeing if it has reached load factor
+    if length >= @bucket_size * LOAD_FACTOR
+      @bucket_size *= 2
+    end
   end
 
   def get(key)
@@ -92,27 +95,44 @@ class HashMap
 end
 
 hashmap = HashMap.new
-puts 'Round 1'
 hashmap.set('Fred', 'Smith')
-puts "entries: #{hashmap.entries}"
-puts "values: #{hashmap.values}"
-puts "keys: #{hashmap.keys}"
-puts "length #{hashmap.length}"
-puts "has: Fred #{hashmap.has('Fred')}"
-puts "get: Fred #{hashmap.get('Fred')}"
-puts 'Round 2, adding Jerry'
-hashmap.set('Jerry', 'Davis')
-puts "entries: #{hashmap.entries}"
-puts "values: #{hashmap.values}"
-puts "keys: #{hashmap.keys}"
-puts "length #{hashmap.length}"
-puts "has: Jeff #{hashmap.has('Jeff')}"
-puts "get: Jerry #{hashmap.get('Jerry')}"
-puts 'round 3, removing Fred'
-puts "remove: Fred #{hashmap.remove('Fred')}"
-puts "entries: #{hashmap.entries}"
-puts "values: #{hashmap.values}"
-puts "keys: #{hashmap.keys}"
-puts "length #{hashmap.length}"
-puts "has: Fred #{hashmap.has('Fred')}"
-puts "get: Fred #{hashmap.get('Fred')}"
+hashmap.set('Joe', 'Blow')
+hashmap.set('Deb', 'Jackson')
+hashmap.set('Veronica', 'Doh')
+hashmap.set('James', 'Dean')
+hashmap.set('Laura', 'Palmer')
+hashmap.set('Agent', 'Cooper')
+hashmap.set('Ben', 'Horne')
+hashmap.set('Ed', 'Dy')
+hashmap.set('Bob', 'Hill')
+hashmap.set('Dale', 'Gribble')
+hashmap.set('Homer', 'Simpson')
+hashmap.set('Ned', 'Flanders')
+hashmap.set('Tommy', 'Pickles')
+hashmap.set('Eric', 'Red')
+p hashmap.length
+p hashmap.bucket_size
+# puts 'Round 1'
+# hashmap.set('Fred', 'Smith')
+# puts "entries: #{hashmap.entries}"
+# puts "values: #{hashmap.values}"
+# puts "keys: #{hashmap.keys}"
+# puts "length #{hashmap.length}"
+# puts "has: Fred #{hashmap.has('Fred')}"
+# puts "get: Fred #{hashmap.get('Fred')}"
+# puts 'Round 2, adding Jerry'
+# hashmap.set('Jerry', 'Davis')
+# puts "entries: #{hashmap.entries}"
+# puts "values: #{hashmap.values}"
+# puts "keys: #{hashmap.keys}"
+# puts "length #{hashmap.length}"
+# puts "has: Jeff #{hashmap.has('Jeff')}"
+# puts "get: Jerry #{hashmap.get('Jerry')}"
+# puts 'round 3, removing Fred'
+# puts "remove: Fred #{hashmap.remove('Fred')}"
+# puts "entries: #{hashmap.entries}"
+# puts "values: #{hashmap.values}"
+# puts "keys: #{hashmap.keys}"
+# puts "length #{hashmap.length}"
+# puts "has: Fred #{hashmap.has('Fred')}"
+# p hashmap.get('Fred')
