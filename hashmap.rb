@@ -7,7 +7,7 @@ class HashMap
   attr_accessor :bucket, :keys, :values, :codes, :bucket_size
 
   def initialize
-    @bucket = Array.new(16)
+    @bucket = Array.new(16) { [] }
     @keys = []
     @values = []
     @codes = []
@@ -30,7 +30,7 @@ class HashMap
     @values << value
     code = hash(key)
     @codes << code
-    @bucket[code % bucket_size] = LinkedList.new.append({code => value}) # this circumvents needing an index error while respecting fixed bucket sizes
+    @bucket[code % bucket_size] << {code => value} # this circumvents needing an index error while respecting fixed bucket sizes
     # a collision is when two different keys are in the same bucket (generate same hash)
     # grow buckets size when needed by seeing if it has reached load factor
     if length >= @bucket_size * LOAD_FACTOR
@@ -60,10 +60,21 @@ class HashMap
     return nil unless has(key)
 
     code = hash(key)
-    removed_value = @bucket.delete_at(code % @bucket_size).values[0]
-    @keys.delete(key)
-    @values.delete(removed_value)
-    removed_value
+    code_index = code % @bucket_size
+    # find the index of the key
+    # if there's only one item in the array, remove the entire array
+    # else, dequeue the list
+    @keys.delete_at(@keys.index(key))
+    removed_value = nil
+    if @bucket[code_index].length > 1
+      removed_value = @bucket[code_index].pop
+      @values.delete_at(@values.index(removed_value.values[0]))
+    elsif @bucket[code_index].length == 1
+      removed_value = @bucket[code_index][0]
+      @bucket[code_index] = []
+      @values.delete(removed_value.values[0])
+    end
+    removed_value.values[0]
   end
 
   def length
@@ -93,19 +104,19 @@ class HashMap
 end
 
 hashmap = HashMap.new
-puts hashmap.bucket.length
 hashmap.set('Fred', 'Smith')
-puts hashmap.bucket.length
-
-hashmap.set('Fred', 'Smith')
-puts hashmap.bucket.length
-
+hashmap.set('Fred', 'Smalls')
 # puts 'Round 1'
 # hashmap.set('Fred', 'Smith')
  puts "entries: #{hashmap.entries}"
  puts "values: #{hashmap.values}"
  puts "keys: #{hashmap.keys}"
  puts "length #{hashmap.length}"
+p hashmap.remove('Fred')
+puts "entries: #{hashmap.entries}"
+puts "values: #{hashmap.values}"
+puts "keys: #{hashmap.keys}"
+puts "length #{hashmap.length}"
 p hashmap.remove('Fred')
 puts "entries: #{hashmap.entries}"
 puts "values: #{hashmap.values}"

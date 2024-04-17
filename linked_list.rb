@@ -38,6 +38,10 @@ class LinkedList
     @nodes
   end
 
+  def head
+    @head
+  end
+
   def tail
     # returns the last node in the list
     @list[-1]
@@ -52,6 +56,7 @@ class LinkedList
     # removes the last eleent from the list
     @list.pop
     @nodes -= 1
+    @head
   end
 
   def contains?(val)
