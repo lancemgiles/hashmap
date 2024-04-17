@@ -5,6 +5,7 @@
 # expand bucket as more values are added
 class HashMap
   # this project is only concerned with hashmaps for strings
+  LOAD_FACTOR = 0.8
   attr_accessor :bucket, :keys, :values, :codes, :bucket_size
 
   def initialize
@@ -56,8 +57,9 @@ class HashMap
     # and return the deleted entry’s value.
     # If the key isn’t in the hash map, it should return nil
     return nil unless has(key)
-
-    @bucket.pop(@bucket[key])
+   # @keys = @keys.map { |k| k == key ? nil : k }
+    code = hash(key)
+    @bucket.delete_at(code % @bucket_size).values[0]
   end
 
   def length
@@ -87,18 +89,27 @@ class HashMap
 end
 
 hashmap = HashMap.new
-hashmap.set('Fred', 'Smith') # Fred is hashed into a code, stored in bucket of code's index
-p hashmap.entries
-p hashmap.values
-p hashmap.keys
-p hashmap.length
-p hashmap.has('Fred')
-p hashmap.get('Fred')
-
-hashmap.set('Jerry', 'Davis') # Fred is hashed into a code, stored in bucket of code's index
-p hashmap.entries
-p hashmap.values
-p hashmap.keys
-p hashmap.length
-p hashmap.has('Jeff')
-p hashmap.get('Jerry')
+puts 'Round 1'
+hashmap.set('Fred', 'Smith')
+puts "entries: #{hashmap.entries}"
+puts "values: #{hashmap.values}"
+puts "keys: #{hashmap.keys}"
+puts "length #{hashmap.length}"
+puts "has: Fred #{hashmap.has('Fred')}"
+puts "get: Fred #{hashmap.get('Fred')}"
+puts 'Round 2, adding Jerry'
+hashmap.set('Jerry', 'Davis')
+puts "entries: #{hashmap.entries}"
+puts "values: #{hashmap.values}"
+puts "keys: #{hashmap.keys}"
+puts "length #{hashmap.length}"
+puts "has: Jeff #{hashmap.has('Jeff')}"
+puts "get: Jerry #{hashmap.get('Jerry')}"
+puts 'round 3, removing Fred'
+puts "remove: Fred #{hashmap.remove('Fred')}"
+puts "entries: #{hashmap.entries}"
+puts "values: #{hashmap.values}"
+puts "keys: #{hashmap.keys}"
+puts "length #{hashmap.length}"
+puts "has: Fred #{hashmap.has('Fred')}"
+puts "get: Fred #{hashmap.get('Fred')}"
