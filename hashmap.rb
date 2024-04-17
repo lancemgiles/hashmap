@@ -32,7 +32,7 @@ class HashMap
     @values << value
     code = hash(key)
     @codes << code
-    @bucket.insert(code % bucket_size,{code => value}) # this circumvents needing an index error while respecting fixed bucket sizes
+    @bucket[code % bucket_size] = {code => value} # this circumvents needing an index error while respecting fixed bucket sizes
     # a collision is when two different keys are in the same bucket (generate same hash)
     # grow buckets size when needed by seeing if it has reached load factor
     if length >= @bucket_size * LOAD_FACTOR
@@ -95,29 +95,19 @@ class HashMap
 end
 
 hashmap = HashMap.new
+puts hashmap.bucket.length
 hashmap.set('Fred', 'Smith')
-hashmap.set('Joe', 'Blow')
-hashmap.set('Deb', 'Jackson')
-hashmap.set('Veronica', 'Doh')
-hashmap.set('James', 'Dean')
-hashmap.set('Laura', 'Palmer')
-hashmap.set('Agent', 'Cooper')
-hashmap.set('Ben', 'Horne')
-hashmap.set('Ed', 'Dy')
-hashmap.set('Bob', 'Hill')
-hashmap.set('Dale', 'Gribble')
-hashmap.set('Homer', 'Simpson')
-hashmap.set('Ned', 'Flanders')
-hashmap.set('Tommy', 'Pickles')
-hashmap.set('Eric', 'Red')
-p hashmap.length
-p hashmap.bucket_size
+puts hashmap.bucket.length
+
+hashmap.set('Fred', 'Smith')
+puts hashmap.bucket.length
+
 # puts 'Round 1'
 # hashmap.set('Fred', 'Smith')
-# puts "entries: #{hashmap.entries}"
-# puts "values: #{hashmap.values}"
-# puts "keys: #{hashmap.keys}"
-# puts "length #{hashmap.length}"
+ puts "entries: #{hashmap.entries}"
+ puts "values: #{hashmap.values}"
+ puts "keys: #{hashmap.keys}"
+ puts "length #{hashmap.length}"
 # puts "has: Fred #{hashmap.has('Fred')}"
 # puts "get: Fred #{hashmap.get('Fred')}"
 # puts 'Round 2, adding Jerry'
