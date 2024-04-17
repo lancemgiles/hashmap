@@ -1,4 +1,6 @@
-# error to raise: raise IndexError if index.negative? || index >= @buckets.length
+# frozen_string_literal: true
+
+# DIY Hash Map
 class HashMap
   # this project is only concerned with hashmaps for strings
   LOAD_FACTOR = 0.8
@@ -15,7 +17,7 @@ class HashMap
   def hash(key)
     hash_code = 0
     prime_number = 31
-       
+
     key.each_char do |char|
       hash_code = prime_number * hash_code + char.ord
     end
@@ -24,19 +26,19 @@ class HashMap
 
   def set(key, value)
     # If a key already exists, then the old value is overwritten
-    if has(key)
-      remove(key)
-    end
+    remove(key) if has(key)
+
     @keys << key
     @values << value
     code = hash(key)
     @codes << code
-    @bucket[code % bucket_size] << {code => value} # this circumvents needing an index error while respecting fixed bucket sizes
+    @bucket[code % bucket_size] << { code => value }
+    # this circumvents needing an index error while respecting fixed bucket sizes
     # a collision is when two different keys are in the same bucket (generate same hash)
     # grow buckets size when needed by seeing if it has reached load factor
-    if length >= @bucket_size * LOAD_FACTOR
-      @bucket_size *= 2
-    end
+    return unless length >= @bucket_size * LOAD_FACTOR
+
+    @bucket_size *= 2
   end
 
   def get(key)
@@ -61,17 +63,21 @@ class HashMap
     return nil unless has(key)
 
     code_index = hash(key) % @bucket_size
-    @keys.delete_at(@keys.index(key))
+    rm_key(key)
     removed_value = nil
     if @bucket[code_index].length > 1
-      removed_value = @bucket[code_index].pop
-      @values.delete_at(@values.index(removed_value.values[0]))
-    elsif @bucket[code_index].length == 1
+      removed_value = @bucket[code_index].pop.values[0]
+      @values.delete_at(@values.index(removed_value))
+    else
       removed_value = @bucket[code_index][0]
       @bucket[code_index] = []
       @values.delete(removed_value.values[0])
     end
     removed_value.values[0]
+  end
+
+  def rm_key(key)
+    @keys.delete_at(@keys.index(key))
   end
 
   def length
@@ -84,47 +90,17 @@ class HashMap
     initialize
   end
 
-  def keys
-    # returns an array containing all the keys inside the hash map.
-    @keys
-  end
-
-  def values
-    # returns an array containing all the values.
-    @values
-  end
-
   def entries
     # returns an array that contains each key, value pair.
     @bucket
   end
 end
 
-hashmap = HashMap.new
-hashmap.set('Fred', 'Smith')
-hashmap.set('Fred', 'Smith')
-# puts 'Round 1'
-# hashmap.set('Fred', 'Smith')
- puts "entries: #{hashmap.entries}"
- puts "values: #{hashmap.values}"
- puts "keys: #{hashmap.keys}"
- puts "length #{hashmap.length}"
-
-# puts "has: Fred #{hashmap.has('Fred')}"
-# puts "get: Fred #{hashmap.get('Fred')}"
-# puts 'Round 2, adding Jerry'
-# hashmap.set('Jerry', 'Davis')
-# puts "entries: #{hashmap.entries}"
-# puts "values: #{hashmap.values}"
-# puts "keys: #{hashmap.keys}"
-# puts "length #{hashmap.length}"
-# puts "has: Jeff #{hashmap.has('Jeff')}"
-# puts "get: Jerry #{hashmap.get('Jerry')}"
-# puts 'round 3, removing Fred'
-# puts "remove: Fred #{hashmap.remove('Fred')}"
-# puts "entries: #{hashmap.entries}"
-# puts "values: #{hashmap.values}"
-# puts "keys: #{hashmap.keys}"
-# puts "length #{hashmap.length}"
-# puts "has: Fred #{hashmap.has('Fred')}"
-# p hashmap.get('Fred')
+hm = HashMap.new
+hm.set('bread', 'butter')
+hm.set('sugar', 'salt')
+p hm.entries
+p hm.remove('bread')
+p hm.entries
+p hm.remove('sugar')
+p hm.entries
