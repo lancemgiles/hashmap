@@ -57,9 +57,12 @@ class HashMap
     # and return the deleted entry’s value.
     # If the key isn’t in the hash map, it should return nil
     return nil unless has(key)
-   # @keys = @keys.map { |k| k == key ? nil : k }
+
     code = hash(key)
-    @bucket.delete_at(code % @bucket_size).values[0]
+    removed_value = @bucket.delete_at(code % @bucket_size).values[0]
+    @keys.delete(key)
+    @values.delete(removed_value)
+    removed_value
   end
 
   def length
