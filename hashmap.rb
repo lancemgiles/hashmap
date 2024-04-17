@@ -1,8 +1,6 @@
+require './linked_list'
 
-
-# error to raise raise IndexError if index.negative? || index >= @buckets.length
-# should take a key (ex: 'Carlos'), hash it into something, store it in a bucket
-# expand bucket as more values are added
+# error to raise: raise IndexError if index.negative? || index >= @buckets.length
 class HashMap
   # this project is only concerned with hashmaps for strings
   LOAD_FACTOR = 0.8
@@ -32,7 +30,7 @@ class HashMap
     @values << value
     code = hash(key)
     @codes << code
-    @bucket[code % bucket_size] = {code => value} # this circumvents needing an index error while respecting fixed bucket sizes
+    @bucket[code % bucket_size] = LinkedList.new.append({code => value}) # this circumvents needing an index error while respecting fixed bucket sizes
     # a collision is when two different keys are in the same bucket (generate same hash)
     # grow buckets size when needed by seeing if it has reached load factor
     if length >= @bucket_size * LOAD_FACTOR
@@ -108,6 +106,11 @@ puts hashmap.bucket.length
  puts "values: #{hashmap.values}"
  puts "keys: #{hashmap.keys}"
  puts "length #{hashmap.length}"
+p hashmap.remove('Fred')
+puts "entries: #{hashmap.entries}"
+puts "values: #{hashmap.values}"
+puts "keys: #{hashmap.keys}"
+puts "length #{hashmap.length}"
 # puts "has: Fred #{hashmap.has('Fred')}"
 # puts "get: Fred #{hashmap.get('Fred')}"
 # puts 'Round 2, adding Jerry'
