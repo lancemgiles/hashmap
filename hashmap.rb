@@ -1,5 +1,3 @@
-require './linked_list'
-
 # error to raise: raise IndexError if index.negative? || index >= @buckets.length
 class HashMap
   # this project is only concerned with hashmaps for strings
@@ -26,6 +24,9 @@ class HashMap
 
   def set(key, value)
     # If a key already exists, then the old value is overwritten
+    if has(key)
+      remove(key)
+    end
     @keys << key
     @values << value
     code = hash(key)
@@ -59,11 +60,7 @@ class HashMap
     # If the key isn’t in the hash map, it should return nil
     return nil unless has(key)
 
-    code = hash(key)
-    code_index = code % @bucket_size
-    # find the index of the key
-    # if there's only one item in the array, remove the entire array
-    # else, dequeue the list
+    code_index = hash(key) % @bucket_size
     @keys.delete_at(@keys.index(key))
     removed_value = nil
     if @bucket[code_index].length > 1
@@ -105,23 +102,14 @@ end
 
 hashmap = HashMap.new
 hashmap.set('Fred', 'Smith')
-hashmap.set('Fred', 'Smalls')
+hashmap.set('Fred', 'Smith')
 # puts 'Round 1'
 # hashmap.set('Fred', 'Smith')
  puts "entries: #{hashmap.entries}"
  puts "values: #{hashmap.values}"
  puts "keys: #{hashmap.keys}"
  puts "length #{hashmap.length}"
-p hashmap.remove('Fred')
-puts "entries: #{hashmap.entries}"
-puts "values: #{hashmap.values}"
-puts "keys: #{hashmap.keys}"
-puts "length #{hashmap.length}"
-p hashmap.remove('Fred')
-puts "entries: #{hashmap.entries}"
-puts "values: #{hashmap.values}"
-puts "keys: #{hashmap.keys}"
-puts "length #{hashmap.length}"
+
 # puts "has: Fred #{hashmap.has('Fred')}"
 # puts "get: Fred #{hashmap.get('Fred')}"
 # puts 'Round 2, adding Jerry'
