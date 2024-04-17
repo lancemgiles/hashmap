@@ -40,11 +40,8 @@ class HashMap
     # takes one argument as a key and returns the value that is assigned to this key. If key is not found, return nil
     return nil unless has(key)
 
-    h =@bucket.find do |k| 
-      next if k.nil?
-      
-      k.values_at(key)
-    end
+    code = hash(key)
+    h = @bucket[code % @bucket_size]
     h.values[0]
   end
 
@@ -98,7 +95,7 @@ p hashmap.length
 p hashmap.has('Fred')
 p hashmap.get('Fred')
 
-hashmap.set('Jerry', 'Larry') # Fred is hashed into a code, stored in bucket of code's index
+hashmap.set('Jerry', 'Davis') # Fred is hashed into a code, stored in bucket of code's index
 p hashmap.entries
 p hashmap.values
 p hashmap.keys
